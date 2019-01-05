@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Symmetric Matrices, Similar Matrices\vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Shijie Gu, Dec 13, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+\vspace{1ex}
+\begin{enumerate}
+\item \textbf{Two good facts about symmetric matrices}\\
+(1) Eigenvalues are real. (2) Eigenvectors are orthonormal. Put formally, this is the \textbf{Spectral Theorem}: every symmetric matrix can be written as $A=Q \Lambda Q^{-1}= Q\Lambda Q^{T}$. For proof, you may skip the ones on Strang and refer to Matthew's handout.\\
+\\
+For a 2 by 2 matrix $A$, the above equation can be written out as: (now you see clearly the sum of rank 1 \textbf{projection} matrices) 
+\begin{align}
+A=\m{\bm{x_1} & \bm{x_2}} \m{\lambda_1 & 0\\0 & \lambda_2}\m{\bm{x_1}^T\\\bm{x_2}^T}=\lambda_1 \bm{x_1} \bm{x_1}^T+\lambda_2 \bm{x_2} \bm{x_2}^T
+\end{align}
+\textbf{Exercise 1}(Strang 6.4-23) True or False: (a) A matrix with real eigenvalues and orthogonal eigenvectors is symmetric. (b) The inverse of a symmetric matrix is symmetric.
+
+\textbf{Exercise 2}(Strang 6.4-28) This A is nearly symmetric. But its eigenvectors are far from orthogonal: find A's eigenvectors, $A=\m{1 & 10^{-15}\\0 & 1+10^{-15}}$.\\
+\\
+\item \textbf{One more good fact about symmetric and orthogonal matrices}\\
+\textbf{Exercise 3} Show that $\|\lambda\|=1$ \textbf{for the eigenvalues of every orthogonal matrix}.\\
+\\
+\textbf{Exercise 4}(orthogonal and symmetric matrices) If $A=I$ (2 by 2) and $B=\m{0 & A\\A & 0}$, find all four eigenvalues and eigenvectors of B.
+
+\item \textbf{Positive definite matrices}\\
+Five equivalent ways to define "Positive definite" for a \textbf{symmetric matrix}:
+\begin{enumerate}
+\item All n pivots are positive
+\item All n upper left determinants are positive
+\item All n eigenvalues are positive
+\item $\bm{x}^TA\bm{x}$ is positive except at $\bm{x}=0$.\\
+To understand the term $\bm{x}^TA\bm{x}$, let's write $A=Q\Lambda Q^{T}$ then,
+\begin{align}
+\bm{x}^TA\bm{x}=\m{x_1 & x_2 & ... & x_n} Q\Lambda Q^{T} \m{x_1 \\ x_2 \\ ... \\ x_n}=\m{X_1 & X_2 & ... & X_n} \Lambda \m{X_1 \\ X_2 \\ ... \\ X_n}= \lambda_1 X_1^2+\lambda_2 X_2^2+...\lambda_n X_n^2
+\end{align}
+Now you see the connection to eigenvalues. Use $A=LDL^T$ to see the connection to pivots (See Strang-6.5A)\\
+\textbf{Exercise 5} (Strang 6.5-9) Find the 3 by 3 symmetric matrix $A$ and its pivots, rank, eigenvalues and determinant.\\
+$\m{x_1 & x_2 & x_3}\m{A}\m{x_1 \\ x_2 \\ x_3}=4(x_1-x_2+2x_3)^2$
+(Hint: use $A=LDL^T$)\\
+\\
+
+\item $A$ equals $R^T R$ for a matrix $R$ with independent columns.
+\end{enumerate}
+\textbf{Exercise 6} Can you explain why (e) holds?\\
+\\
+\\
+\\
+\textbf{Exercise 7} Based on $A=LDL^T=Q\Lambda Q^T$, and you want to find R such that $R^T R=A$, you can let R= \underline{\hspace{1cm}} or \underline{\hspace{1cm}}. If you want R to be symmetric you can also let R=\underline{\hspace{1cm}}.\\
+\\
+\textbf{Exercise 8} (Strang 6.5-12)For what numbers c and d are A positive definite? $A=\m{c & 1 & 1\\1 & c & 1\\1 & 1 & c}.$\\
+\\
+\item{\textbf{Similar matrices}}\\
+\textbf{Please note that the notation in my handout is different from the one in 6.1 in Strang 5E, but equivalent.}\\
+Similar matrices represent the same transformation of n-dimensional space under bases $M$ other than $I$. In the following A and B are similar.
+\begin{align}
+    B=M^{-1}AM, \text{ $M$ is any invertible matrix.}
+\end{align}
+Two points: \begin{enumerate} \item Similar matrices have the same eigenvalues. \item If $\bm{x}$ is an eigenvector of $A$, then $M^{-1}\bm{x}$ is an eigenvector of B.\end{enumerate}
+\textbf{Exercise 9} (Strang 4E 6.6-18) If $B$ is invertible, prove that \textbf{$AB$ is similar to $BA$}. Therefore, $AB$ and $BA$ have the same eigenvalues.\\
+\\
+\\
+\textbf{Exercise 10} (Strang 4E 6.6-20e) If we exchange rows 1 and 2 of A, and then exchange columns 1 and 2, the eigenvalues stay the same. Why? Hint: In this case, $M$=\underline{\hspace{1cm}}.\\
+\\
+\end{enumerate}
+\textbf{More Exercise 1}(Strang 6.5-17)\\
+(Before you attempt, try Strang 6.5-16, where it is shown that a positive definite matrix cannot have a zero on its diagonal. )Show that a diagonal entry $a_ii$ of a symmetric matrix cannot be smaller than all the $\lambda's$. Hint: If it were, then $A-a_{jj}I$ would have \underline{\hspace{1cm}} eigenvalues and would therefore be positive definite. On the other hand, $A-a_{jj}I$ has a \underline{\hspace{1cm}} on its main diagonal.
+\\
+The conclusion you draw from Strang 6.5-17 can be used to prove the Hadamard inequality, which states that for any positive definite matrix $K$, its determinant is less than the product of its diagonal elements, that is,
+\begin{align}
+    |K| \leq \prod_i K_{ii}
+\end{align}
+\textbf{More Exercise 2}(Strang 6.6-8, 4E)\\
+Suppose $Ax=\lambda x$ and $Bx=\lambda x$ with the same $\lambda's$ and $x's$. With $n$ independent eigenvectors we have $A=B$: why? Find A$\neq$ B when both have eigenvalues 0,0 but only one line of eigenvectors $(x_1,0)$.\\
+\textbf{Practice by yourself} (such as when you review for quiz)
+Strang 6.4-12, 14, 32; 6.5-14, 20, 33 (Hint: switch the order of elements in the dot product term.); 
+
+\end{document}

@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Test for Local Minimum/Maximum (Elaborating on Strang 6.5)\vspace{-5ex}}
+\lhead{Linear Algebra}
+\rhead{Shijie Gu, Dec 31, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+\vspace{1ex}
+\begin{enumerate}
+\item \textbf{Approximation of a function} \footnote{I mainly refer from the Calculus textbook Stewart 6E}
+\begin{enumerate}
+\item First order (linear) approximation\\
+The linearization of a function of one variable $f(x)$ can be written as
+\begin{align}
+L(x)=f(a)+f'(a)(x-a)
+\end{align} \label{equ:linear_single}
+The graph of $L$ is the tangent line to the curve $z=f(x)$ at $(a,f(a))$, and $f(x)\approx L(x)$ around $x=a$. This is called the first degree Taylor polynomial of $f$ at $x=a$. This can be extended to a function $g$ of two variables at a point $(a,b)$:
+\begin{align}
+L(x,y)=g(a,b)+f_x(a,b)(x-a)+f_y(a,b)(y-a)
+\end{align} \label{equ:linear_single}
+The graph of $L$ is the tangent plane to the surface $z=g(x,y)$ at $(a,b,g(a,b))$, and $g(x,y)\approx L(x,y)$ around $(a,b)$.
+
+\item Second order (quadratic) approximation\\
+If $g$ has continuous second-order partial derivatives at $(a,b)$, then the second-degree Taylor polynomial of $g$ at $(a,b)$ is
+\begin{align}
+Q(x,y)=& g(a,b)+g_x(a,b)(x-a)+g_y(a,b)(y-a)\\
+& +\frac{1}{2}g_{xx}(a,b)(x-a)^2+g_{xy}(a,b)(x-a)(x-b)+\frac{1}{2}g_{yy}(a,b)(y-b)^2 \nonumber
+\end{align} \label{equ:quad}
+Verify that (1) $Q(a,b)=f(a,b)$, (2) Q has the same first- and second- order partial derivatives as $g$ at $(a,b)$.\\
+Therefore, at a small $\Delta x$ around $(a,b)$:
+\begin{align}
+Q(a+\Delta x,b+\Delta x)=& g(a,b)+g_x(a,b)\Delta x+g_y(a,b)\Delta x\\
+& +\frac{1}{2}g_{xx}(a,b)\Delta x^2+g_{xy}(a,b)\Delta x^2+\frac{1}{2}g_{yy}\Delta x^2 \nonumber
+\end{align}
+This can be written in a more compact form, which also suits any function from $R^n$ to $R^n$ with the input vectors $\bm{x}$ and $\Delta \bm{x} \in R^n $: 
+\begin{align}g(\bm{x}+\Delta \bm{x})\approx Q(\bm{x}+\Delta \bm{x})=g(\bm{x})+\nabla g(\bm{x})\Delta \bm{x}+\frac{1}{2}\Delta \bm{x}^T H(g(\bm{x})) \Delta\bm{x} \label{equ:approx}\end{align}
+where $H(g(\bm{x}))$ is called the Hessian matrix of $g$ at $\bm{x}$.\\
+\[{\displaystyle \mathbf {H} ={\begin{bmatrix}{\dfrac {\partial ^{2}f}{\partial x_{1}^{2}}}&{\dfrac {\partial ^{2}f}{\partial x_{1}\,\partial x_{2}}}&\cdots &{\dfrac {\partial ^{2}f}{\partial x_{1}\,\partial x_{n}}}\\[2.2ex]{\dfrac {\partial ^{2}f}{\partial x_{2}\,\partial x_{1}}}&{\dfrac {\partial ^{2}f}{\partial x_{2}^{2}}}&\cdots &{\dfrac {\partial ^{2}f}{\partial x_{2}\,\partial x_{n}}}\\[2.2ex]\vdots &\vdots &\ddots &\vdots \\[2.2ex]{\dfrac {\partial ^{2}f}{\partial x_{n}\,\partial x_{1}}}&{\dfrac {\partial ^{2}f}{\partial x_{n}\,\partial x_{2}}}&\cdots &{\dfrac {\partial ^{2}f}{\partial x_{n}^{2}}}\end{bmatrix}}.}\]
+For a function in $R^2$, it is simply 
+$H=\m{\dfrac {\partial ^{2}f}{\partial x^{2}} & \dfrac {\partial ^{2}f}{\partial x \partial y}\\\dfrac {\partial ^{2}f}{\partial x \partial y} & \dfrac {\partial ^{2}f}{\partial y^{2}}}$. This is the matrix in your textbook.
+
+\end{enumerate}
+
+\item \textbf{Test for local min/max} at the point $\bm{x}$.\\
+The test here is based on the quadratic approximation of a function reviewed above. In calculus, you probably have learned it as the Second Derivative Test. Now with the concept of positive definiteness in linear algebra, you know why the test works. \footnote{Credit goes to: https://math.stackexchange.com/questions/1985889/why-how-does-the-determinant-of-the-hessian-matrix-combined-with-the-2nd-deriva}\\
+First, you should find the critical points where the first derivatives are all zero. This will lead to $\nabla g=\bm{0}$. Therefore, suppose $\bm{x}$ is a critical point, the equation $\ref{equ:approx}$ is now simply:
+\begin{align}
+g(\bm{x}+\Delta \bm{x})\approx Q(\bm{x}+\Delta \bm{x})=g(\bm{x})+\frac{1}{2}\Delta \bm{x}^T H(g(\bm{x})) \Delta\bm{x} \label{equ:approx2}
+\end{align}
+Thus, for small displacements $\Delta \bm{x}$, the Hessian tells us how the function behaves around the critical point $\bm{x}$.\\
+The Hessian $H(g(\bm{x}))$ is positive definite if and only if $\Delta \bm{x}^T H(g(\bm{x})) \Delta\bm{x}>0$ for $\Delta\bm{x}\neq\bm{0}$. Equivalently, this is true if and only if all the eigenvalues of $H(g(\bm{x}))$ are positive. Then no matter which direction you move away from the critical point, the value of $g(\bm{x}+\Delta \bm{x})$ grows (for small $\Delta \bm{x}$), so $\bm{x}$ is a local minimum.
+
+Likewise, the Hessian $H(g(\bm{x}))$ is negative definite if and only if $\Delta \bm{x}^T H(g(\bm{x})) \Delta\bm{x}<0$ for $\Delta\bm{x}\neq\bm{0}$. Equivalently, this is true if and only if all the eigenvalues of $H(g(\bm{x}))$ are negative. Then no matter which direction you move away from the critical point, the value of $g(\bm{x}+\Delta \bm{x})$ decreases (for small $\Delta \bm{x}$), so a is a local maximum.
+
+Now suppose that the Hessian $H(g(\bm{x}))$  is indefinite, but $\Delta \bm{x}^T H(g(\bm{x})) \Delta\bm{x} \neq 0$ for $\Delta\bm{x}\neq\bm{0}$. Equivalently, this is the same thing as saying that $H(g(\bm{x}))$ has mixed positive and negative (but all nonzero) eigenvalues. Then (for small $|\Delta\bm{x}|$) the value of $g(\bm{x}+\Delta \bm{x})$ decreases or increases as you move away from the critical point, depending on which direction you take, so a is a saddle point. (Take a look at equation 3 of the textbook 6.5 if you wonder what it is to do with eigenvalues. Just think about change of basis.)
+
+Lastly, suppose that there exists some $\Delta\bm{x}\neq\bm{0}$ such that $\Delta \bm{x}^T H(g(\bm{x})) \Delta\bm{x}=0$. This is true if and only if $H(g(\bm{x}))$ has a eigenvalue that is equal to 0. In this case the test fails: along this direction we aren't really sure whether the function $g$ is increasing or decreasing as we move away from $\bm{x}$; our second order approximation isn't good enough and we need higher order approximation terms to decide. Or, you can use other algebraic methods to find out. The example included is one such case.\\
+What I've described for you here is the intuition for the general situation on $R^n$, but in $R^2$, the test becomes a bit simpler. In $R^2$ we can only have two (possibly identical) eigenvalues $\lambda_1$ and $\lambda_2$ for $H(g(\bm{x}))$, since it is a 2 by 2 matrix. We can take advantage of the fact that the determinant of a matrix is the product of the eigenvalues, and the trace is their sum.\\
+In the $R^2$ case:
+\begin{enumerate}
+    \item $\det(H(g(\bm{x})))=0$ means that there is a zero eigenvalue and so the test fails.
+    \item $\det(H(g(\bm{x})))<0$ means that both eigenvalues are of different signs, so we have a saddle point at $\bm{x}$.
+    \item $\det(H(g(\bm{x})))>0$ means that both eigenvalues have the same sign: either both positive or both negative, and we must use the trace to decide which it is. In fact, rather than using the trace, it actually suffices to just use the top left entry $\dfrac {\partial ^{2}g}{\partial x^{2}}$ of $H(g(\bm{x}))$ to decide. In other words, $\dfrac {\partial ^{2}g}{\partial x^{2}}>0$ means both eigenvalues are positive (local min at a $\bm{x}$), whereas $\dfrac {\partial ^{2}g}{\partial x^{2}}<0$ means both eigenvalues are negative (local max at $\bm{x}$).
+\end{enumerate}
+This is probably the form you were taught in a calculus course.
+\item \textbf{Example}\\
+\textbf{Question}: $f(x,y)=\frac{1}{4}x^4+x^2y+y^2$. Find the critical point(s) and do the second derivative test.\\
+\textbf{Solution}: We first find the critical points by setting first derivatives to 0: we need $x^2+2y=0$. This gives the critical points.\\
+Hessian matrix at points $(x,-\frac{1}{2}x^2)$, $H=\m{2x^2 & 2x\\2x & 2}$. We can use the determinant tests to see if $H$ is positive definite or not. We find that $\det(H)=0$, thus our second derivative test failed to tell us if $(x,-\frac{1}{2}x^2)$ are local min/max.\\
+However, we notice that the function $f$ can be written as $f=(\frac{1}{2}x^2+y)^2$. $f=(\frac{1}{2}x^2+y)^2\geq0$ and is equal to 0 when $x^2+2y=0$. This shows that the points on the curve $x^2+2y=0$ are local minimums, and they are actually also global minimums.
+
+
+
+\end{enumerate}
+
+
+
+\end{document}

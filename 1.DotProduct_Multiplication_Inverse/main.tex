@@ -1,0 +1,97 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Dot Product, Matrix Multiplication, and the Inverse Matrix \vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Shijie Gu, September 27, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{enumerate}
+\item (Some side notes) Dot product and correlation
+\begin{enumerate}
+\item The physics interpretation of the dot product.\\
+if there is one force $\boldsymbol{a}=(a_1,a_2) $ acting in the displacement vector $\boldsymbol{b}=(b_1,b_2)$
+then $\boldsymbol{a} \bigcdot \boldsymbol{b} = a_1*b_1 + a_2*b_2$ can be interpreted as work the force does: the sum of that on the x direction plus that on the y direction. This equals $\boldsymbol{a} \bigcdot \boldsymbol{b} =||a||*||b||cos(\theta)$, which can be interpreted by projecting $\boldsymbol{b}$ onto 2 directions: one perpendicular to $\boldsymbol{a}$, and the other in the same direction as $\boldsymbol{a}$. The work done perpendicular to $\boldsymbol{a}$ is 0, while the other is the actual work done.
+\item
+With two random variables X and Y with zero mean, the correlation between the two is defined as: $corr(x,y)=\frac{E(XY)}{||X||||Y||}=cos(\theta)$
+\end{enumerate}
+
+\item Matrix Multiplication: \\
+Viewpoint 1: Look in columns\\
+Viewpoint 2: Matrix acts on a vector. In the following example: A acts on $\boldsymbol{a}$\\
+Example:
+ \begin{equation} \label{equ:Aa=b} A\boldsymbol{a}=\begin{bmatrix}
+    1  & 0 & 0 \\
+    -1 & 1 & 0 \\
+    0  & -1 & 1\\
+\end{bmatrix} \begin{bmatrix}
+x_1\\x_2\\x_3
+\end{bmatrix} = \begin{bmatrix} 1\\-1\\0 \end{bmatrix} * x_1 + \begin{bmatrix} 0\\1\\-1 \end{bmatrix} * x_2 + \begin{bmatrix} 0\\0\\1 \end{bmatrix} * x_3 = \begin{bmatrix}     x_1 \\ -x_1 + x_2 \\
+    - x_2 + x_3 \\ \end{bmatrix} = \boldsymbol{b} \end{equation}\\
+\item (Toy example) Transforming in 2D: \\
+$\begin{bmatrix}
+    1  & 0 \\
+    0 & 1  \\
+\end{bmatrix}\begin{bmatrix}2\\1\\\end{bmatrix}=\begin{bmatrix}2\\1\\\end{bmatrix};\qquad
+\begin{bmatrix}
+    1  & 1 \\
+    0 & 1  \\
+\end{bmatrix}\begin{bmatrix}2\\1\\\end{bmatrix}=\begin{bmatrix}3\\1\\\end{bmatrix};\qquad
+\begin{bmatrix}
+    1  & 1 \\
+    0 & 0  \\
+\end{bmatrix}\begin{bmatrix}2\\1\\\end{bmatrix}=\begin{bmatrix}3\\0\\\end{bmatrix};$\\
+The third example is transforming a 2D point into a 1-D subspace: x-axis.
+\item Inverse and invertible matrix:\\
+The word: inverse, invertible.
+Another case where the word 'inverse' is used: the inverse function, commonly shown as: $y^{-1}(x)$.
+\begin{enumerate}
+\item What is the "inverse of a matrix"\\
+Suppose I have $\boldsymbol{b}$, which is the right hand side of the equation (\ref{equ:Aa=b}), and the matrix $A$ but not $\boldsymbol{a}$. Now I want to find $\boldsymbol{a}$. This question is the \textit{inverse} of that we explored in section 2 above, where we go from the left of the equation to the right: now we want to go from the transformed $\boldsymbol{a}$, which is $\boldsymbol{b}$, back to $\boldsymbol{a}$. How do we do it? Wouldn't it be great to have something like below that can easily invert the transformation from $\boldsymbol{a}$ to $\boldsymbol{b}$ so that we can get $\boldsymbol{b}$ from $\boldsymbol{a}$ easily?
+
+ \begin{equation}
+ A^{-1}A\boldsymbol{a}=A^{-1}\boldsymbol{b}=\boldsymbol{a}
+ \end{equation}
+
+This something, specifically, $A^{-1}$, is called the inverse of $A$.
+
+\item the existence of the inverse of a matrix \label{invert}\\
+This topic will be explored later in the course formally, but here we talk about some intuition.\\
+\hspace*{6mm} Put simply: a transformation brought up by a matrix A is invertible if the transformation is from $\mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$. Then A will have its inverse matrix $A^{-1}$, and $A$ is invertible. Otherwise, dimension reduction occurs, and information is lost forever by the transformation, so the inverse is not attainable. \\
+\hspace*{6mm} This is the idea elaborated by p25-27 of the textbook (4th edition). Matrix $C$ in equation 11 on page 25 is not invertible, ie, \textit{singular}, as it essentially brings $\mathbb{R}^{3} \rightarrow \mathbb{R}^{2}$. Wait...t, why does it bring $\mathbb{R}^{3} \rightarrow \mathbb{R}^{2}$?\\
+\\
+\\
+\\
+Figure 1.10 makes it clear. Building this intuition is all you need at this point of the course -- it will come back later.\\
+In this case, it is easy to spot if some column/row is a combination of the others. However, we need a systematic way to find that out. The \textit{elimination} you are learning this week is one such method. The \textit{pivot number tells you this.}
+\end{enumerate}
+
+\item Solving Linear Equations \\
+Now, let's extend the idea in section \ref{invert}. An n by n invertible matrix attains the full space in the same dimension of n. On the contrary, a matrix that is not invertible will transform vectors only to a \textit{subspace} of the $n^{th}$ dimensional space. This is essentially saying:
+\centerline{\textbf{There is some parts in the space the transformed vector cannot go}} 
+\centerline{\textbf{if the transformation matrix is singular.}}
+\begin{enumerate}
+\item With this perspective, can you explain Example 1 in Section 2.1 to me in column picture why there is no solution to the equations?
+\item How about Example 2?
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+
+
+
+
+\end{document}

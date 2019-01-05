@@ -1,0 +1,93 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Chapter 6.3 Application of Diagonalizing a Matrix\\Solving Constant-Coefficient Differential Equation Systems\vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Shijie Gu, Dec 6, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+\vspace{1ex}
+\begin{enumerate}
+\item \textbf{Review: Change from standard basis into ``eigenvector basis"}\\
+Recall last time when we were introducing diagonalizing a matrix: $A=S\Lambda S^{-1}$, we understood it from $A\bm{x}=S\Lambda S^{-1}\bm{x}$, where $S^{-1}\bm{x}$ first change your vectors from standard world coordinates into those of eigenvectors', then $\Lambda$ applies the stretching or compressing in this eigen-coordinate system. Finally $S$ transforms your vectors back into the normal standard basis. Essentially it is taking the advantage of the eigenvectors' directions, where a matrix multiplication is simply a scaling.
+
+This time, we follow the same spirit of changing our perspective on the world to simplify calculations: we apply to constant-coefficient differential equations. 
+
+\item \textbf{Some vector notations}\\
+Before we begin, let's clarify some notations using an example. For the following differential equation system on the left, we can use matrix notation shown on the right.
+\begin{align*}
+    \frac{du_1}{dt}=&-u_1+2u_2 & &\frac{d\bm{u}}{dt}=A\bm{u}\\
+    \frac{du_2}{dt}=&u_1-2u_2  & &\bm{u} =\m{u_1\\u_2}, A=\m{-1 & 2\\1 & -2}
+\end{align*}
+\textbf{More Exercise 1} (next page)\\
+We will also be using $e^{At}$, which can be seen from substituting $At$ into $e^x$.
+\begin{align*}
+e^x&=1+x+\frac{1}{2}x^2+\frac{1}{6}x^3+...\\
+e^{At}&=I+At+\frac{1}{2}(At)^2+\frac{1}{6}(At)^3+...\\
+\frac{d e^{At}}{dt}&=Ae^{At}=A+A^2t+\frac{1}{2}A^3t^2+...
+\end{align*}
+Comments: (1) $e^{At}$ is a matrix. (2) $e^{At}$ always has the inverse $e^{-At}$ (3) the eigenvalues of $e^{At}$ are $e^{\lambda t}$. (4) $e^A e^B$ is different from $e^B e^A$, both are different from $e^{A+B}$. See Strang 6.3-23.\\
+\textbf{Exercise 1}(Strang 6.3-22)
+If $A^2=A$, show that $e^{At}=I+(e^t-1)A$
+\item \textbf{Solving constant-coefficient differential equations}
+\begin{align*}
+\frac{d\bm{u}}{dt} & =A\bm{u}\\
+S^{-1}\frac{d\bm{u}}{dt} & =S^{-1} A\bm{u}\\
+S^{-1}\frac{d\bm{u}}{dt} & =S^{-1} S \Lambda S^{-1}\bm{u}\\
+S^{-1}\frac{d\bm{u}}{dt} & = \Lambda S^{-1}\bm{u}\\ \frac{d\bm{v}}{dt} & = \Lambda \bm{v}, \hspace{1cm} \bm{v}=S^{-1}\bm{u}\\
+\m{\frac{dv_1}{dt}\\\frac{dv_2}{dt}}&=\m{\lambda_1 & 0\\0&\lambda_2}\m{v_1\\v_2}\\
+\end{align*}
+\vspace{-8ex}
+\begin{align}
+\m{v_1\\v_2}&=\m{Ce^{\lambda_1t}\\De^{\lambda_2t}}, \\& \text{where $C$ and $D$ are determined by the initial condition} \nonumber\\
+\bm{u}&=S\bm{v}=S\m{Ce^{\lambda_1t}\\De^{\lambda_2t}}\\
+\bm{u}&=C\bm{s_1}e^{\lambda_1t}+D\bm{s_2}e^{\lambda_2t} \label{equ:sol}
+\end{align}
+So, to solve for a system in our very first example, we just need to find the eigenvalue and eigenvectors of the coefficient matrix $A$ and plug them into equation \ref{equ:sol}.\\
+
+\textbf{Exercise 2}(Strang 6.3-7)\\
+Suppose $P$ is the projection matrix onto the line $y=x$ in $\bold{R^2}$. What are its eigenvalues? If $\frac{d\bm{u}}{dt}=-P\bm{u}$, what is the limit of $\bm{u}(t)$ at t=$\infty$ starting from $\bm{u}(0)=(3,1)$?
+\\
+\item \textbf{Limiting behavior of the system and Stability}\\
+Stable: solution approach $\bm{u}=\bm{0}$ as t goes to $\infty$.
+From our solution, you see that we need \textbf{both} eigenvalues to have \textbf{real parts negative}. \\
+This is equivalent to (1) trace of A is negative and (2) determinant of A is positive.
+
+\item \textbf{More general way to express the solution to $\frac{d\bm{u}}{dt} =A\bm{u}$: $e^{At}\bm{u}(0)$}\\
+The above derivation is feasible only when an n by n matrix A has n independent eigenvectors. Otherwise, it will fail. So we need a more general way to solve the problem. We propose a solution $\bm{u}=e^{At}\bm{u}(0)$
+
+First, check if this proposed solution satisfies the equation.\\
+Then check if our previous solution is the same as $e^{At}\bm{u}(0)$ (See Strang 6.3 ``The Exponential of a Matrix" for help)
+
+\textbf{Exercise 3}(Strang 6.3 Example 4)\\
+Solve $\frac{d\bm{u}}{dt} =A\bm{u}$, with $A=\m{0 & 1\\-1 & 2}$ (hint: use what we have just found in \textbf{Exercise 1})\\
+\item \textbf{Solving the system $\frac{d\bm{u}}{dt} =A\bm{u} + \bm{b}$}\\
+By now you should be armed with skills to derive solutions on your own. Check with \textbf{Strang 6.3-15}
+\end{enumerate}
+\textbf{More Exercise 1}(Strang 6.3-27)
+What are the coefficient matrix $A$ for the following systems?
+\vspace{-2ex}
+\begin{align*}
+    \frac{dx}{dt}=&0x-4y & \frac{dy}{dt}&=-2x+2y & A=\m{0 & c & -b\\-c & 0 & a\\b &-a & 0}\\ 
+    \frac{dy}{dt}=&-2x+2y & \frac{dx}{dt}&=0x-4y
+\end{align*}
+\textbf{More Exercise 2} (Strang 6.3-14) For anti-symmetric matrix, $e^{At}$ is orthogonal.\\
+(a) With $\frac{d\bm{u}}{dt} =A\bm{u}$, $A$ is above on the right, show that $\|\bm{u}(t)\|^2=u_1^2+u_2^2+u_3^2$ does not change.\\
+(b) If $Q=e^{At}$, show $Q^{T}Q=I$, $Q$ is orthogonal.\footnote{You may also check out this proof for more properties: https://yutsumura.com/eigenvalues-of-real-skew-symmetric-matrix-are-zero-or-purely-imaginary-and-the-rank-is-even/}\\
+\\
+\textbf{More Exercise 3}(Strang 6.3-20)\\
+Starting from $\bm{u}(0)$ the solution at time $T$ is $e^{AT}\bm{u}(0)$. Go an additional time $t$ to reach $e^{At} e^{AT}\bm{u}(0)$. This solution at time $t+T$ can also be written as \underline{\hspace{1cm}}. Conclusion: $e^{At}$ times $e^{AT}$ equals \underline{\hspace{1cm}}.
+
+\end{document}

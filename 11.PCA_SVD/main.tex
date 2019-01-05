@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.7in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage[all,arc,poly]{xy}
+\usepackage{enumerate}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage[pdftex,bookmarks,colorlinks]{hyperref}
+\usepackage{verbatim}
+\usepackage{pdfpages}
+\usepackage{physics}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Rn}{\mathbb{R}^n}
+\newcommand{\lnorm}{\left|\left|}
+\newcommand{\rnorm}{\right|\right|}
+\newcommand{\inv}{^{-1}}
+\newcommand{\p}{\partial}
+\newcommand{\halfepsilon}{\frac{\epsilon}{2}}
+\newcommand{\thirdepsilon}{\frac{\epsilon}{3}}
+\newcommand{\st}{\text{ such that }}
+\newcommand{\letepsilon}{Let $\epsilon>0$}
+\newcommand{\mand}{\text{ and }}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\ninN}{{n\in\N}}
+\newcommand{\iinN}{{i\in\N}}
+\newcommand{\ud}{\, \mathrm{d}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\zo}{{[0,1]}}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Principle Component Analysis (PCA) \\ \hspace{10ex} and Singular Value Decomposition (SVD) \vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Shijie Gu, Dec 20, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+\vspace{1ex}
+
+In this tutorial \footnote{Materials adapted from Emily Mackevicius for Computational Neuroscience Woods Hole Summer Course, Strang 4E \& 5E, and materials from Kristian Herrera for Systems Neuroscience (Harvard MCB105)}, we will use neural data as an example to see how PCA can help make sense of big data---by big I mean high demensional data. We will also see how SVD connects the matrices involved in PCA.
+
+\includegraphics[scale=0.5]{PCA_dia.pdf}
+
+We usually put neural data collected in a matrix of $N\times T$: $N$ neurons' signal at $T$ time points. $N$ can be tens of thousands---in this case the whole data matrix looks messy and is hard to make sense of (see Fig. E for an example, which only has less than 100 neurons.) Thus, we need to a way to reduce the ``dimension" of data to a low number of dimensions that can capture the greatest amount of information contained in your data. Specifically, in our example we want to combine neurons that are correlated into one ensemble, and only look at a few ensembles that are drastically different from each other. In PCA, dimensions are considered redundant when they are highly correlated to other dimensions. If two dimensions are correlated, that means you can use the value of a datapoint in one dimension to predict the value of that data in the other. Thus, having that second dimension doesn’t actually provide any new information---we can get rid of it and not lose any knowledge. When $N$=2 in the data, it is easy to demonstrate visually what it means. Take a look at Fig. A-D.
+
+The visualization should give you an idea that PCA is a powerful tool. In Fig F, I showed a picture of reducing about 700 neurons to only 2 ensembles using PCA. You can see a trajectory of neurons' states at the beginning of the experiment (0s) to the end of the experiment (60s), and when the stimuli (smell) is present during the 10s in the middle of the experiment. \\
+
+\textbf{But how to derive the direction for the greatest variance?} We start with a $N\times T$ matrix of data, $\mathbf{M}$. Assume without loss of generality that $T\geq N$.  Also assume we subtracted the means off each row (from the neuron perspective) or column (from the time perspective) of  $\mathbf{M}$. Before we dive in, I need to introduce the covariance matrix as a preparation.
+
+
+
+\begin{enumerate}
+\item \textbf{Covariance Matrices}\\
+We can calculate covariance from the neuron point of view.  Suppose  $\vec{m}(t)$ is an observed pattern of neuronal firing at time $t$ (a column of the matrix $\mathbf M$).  Then the covariance between neuron $i$ and neuron $j$ is\footnote{Here we are normalizing by $T$ rather than $T-1$ as it is all of the data, not a sample. In our exploration of SVD and PCA, this is a minor issue: you can ignore the difference and still have a good understanding of SVD and PCA. And you will soon see that this would not affect the result of SVD.}: \[\mathbf{C}^\text{neurons}_{ij} = \frac{1}{T}\sum_{t = 1}^T M_{it}M_{jt}\] 
+In matrix notation:  
+\[\underbrace{\mathbf{C}^\text{neurons}}_{\hbox{N x  N}} = \frac{1}{T}\underbrace{\mathbf{M}}_{\hbox{N x  T}}\underbrace{\mathbf{M}^T}_{\hbox{T x  N}}\]
+Alternatively, we can calculate covariance from the neuron point of view: 
+\[\underbrace{\mathbf{C}^\text{time}}_{\hbox{T x  T}} = \frac{1}{N}\underbrace{\mathbf{M}^T}_{\hbox{T x N}}\underbrace{\mathbf{M}}_{\hbox{N x T}}\]
+where $\mathbf{C}^\text{time}_{ij}$ is the covariance between time bins $i$ and $j$
+
+\item \textbf{PCA: How to find the direction of the greatest variance?} \\
+What direction captures most of  $\mathbf{M}$'s variance?  This works similarly from either the time perspective or the neuron perspective. First we show from the time perspective. For each neuron's data $\vec{M_{i,:}}$, the variance across the time domain along an arbitrary direction defined by the unit vector $\vec{v}$ is $\|\vec{M_{i,:}}\cdot \vec{v}\|$. Thus for all of the neurons at once, we have:
+\begin{align*}
+\sigma^2_{\vec{v}\text{ time}} &= \|M\vec{v}\|^2\\
+&= (M\vec{v})^T(\vec{v}M)=(\vec{v}M)^T(M\vec{v})\\
+&= \vec v^TM^TM\vec v\\
+&\propto \vec v^T\mathbf{C}^\text{time}\vec v 
+\end{align*}
+
+The neuron perspective is similar. For each time bin's data $\vec{M_{:,i}}$, the variance across the time domain along an arbitrary direction defined by the unit vector $\vec{v}$ is $\|\vec{M_{:,i}}\cdot \vec{v}\|$. Thus for all of the neurons at once, we have (simply replace M with $M^T$):
+\begin{align*}
+\sigma^2_{\vec{v}\text{ neuron}} &= \|M^T\vec{v}\|^2\\
+&= (M^T\vec{v})^T(\vec{v}M^T)=(\vec{v}M^T)^T(M^T\vec{v})\\
+&= \vec v^TMM^T\vec v\\
+&\propto \vec v^T\mathbf{C}^\text{neuron}\vec v 
+\end{align*}
+
+Regardless of which perspective, we end up at the form of $\vec v^T\mathbf{C}\vec v $.
+
+We want to find the vector $\vec{v}$ with maximal variance, subject to the constraint that $\vec{v}$ is of unit length \footnote{This section is a more straightforward version of page 376 of Strang 5E. I recommended reading page 376 nevertheless.}.  That is: 
+\[\max_{\vec v}\sigma^2_{\vec{v}}\  \text{ such that } ||\vec v||^2 = 1\]
+We use the Lagrange multiplier technique\footnote{An Appendix is available at the end of the document for a refresher}, so set $\sigma^2_{\vec{v}}$'s derivative parallel to $\vec{v}$: 
+\begin{align*}
+\nabla_{\vec v}\vec{v}^T\mathbf{C}\vec{v} &= \lambda \nabla_{\vec v} {\vec v}^T{\vec v}
+\\\vec{v}^T \pdv{\mathbf{C}\vec{v}}{\vec{v}}+{\pdv{\vec{v}}{\vec{v}}}^T(\mathbf{C}\vec{v}) &= 2\lambda {\vec v}
+\qquad (\text{``Product Rule" }{\frac  {\partial {\mathbf  {u}}^{\top }{\mathbf  {v}}}{\partial {\mathbf  {x}}}}={\mathbf  {u}}^{\top }\pdv{\mathbf{v}}{\mathbf{x}}+{\mathbf  {v}}^{\top }\pdv{\mathbf{u}}{\mathbf{x}})
+\\\mathbf{C}^T{\vec v}+\mathbf{C}{\vec v}&=2\lambda {\vec v}
+\\2\mathbf{C}{\vec v}&=2\lambda {\vec v} \qquad \mathbf{C}^T+\mathbf{C}=2\mathbf{C} \text{ for } \mathbf{C} \text{ symmetric}
+\\\mathbf{C}{\vec v} &= \lambda{\vec v}
+\end{align*}
+Notice that this is the eigenvector equation for the covariance matrix $\mathbf{C}$.  That is, eigenvectors of  $\mathbf{C}$ are the directions of the highest variance or the lowest variance---with the eigenvector associated with the largest eigenvalue having the highest variance and vice versa (substitute $\mathbf{C}{\vec v} &= \lambda{\vec v}$ into the objective function $\vec v^T \mathbf{C} \vec v$, you see $\lambda$). This is the goal of PCA---to find directions to project data in terms of the greatest/lowest variance, and we have reached its answer. One comment before we leave PCA. Since both covariance matrices are symmetric, their eigenvectors are orthogonal automatically: this gives uncorrelated directions of difference variance size.
+
+The two perspectives to calculate the covariance are not stand-alone---they are closely connected---by SVD. Before we go into the next section for SVD, let us write down the eigen-decompositions that give us the answer of the PCA problem.
+
+Since both $\mathbf{C}$ are symmetric, given the Spectral Theorem (Chapter 6.4 on Strang), we can decompose $\mathbf{C}=Q\Lambda Q^{-1}$. Specifically, we denote the two perspectives as the following:
+
+\[\frac{1}{T}\underbrace{\mathbf{M}}_{\hbox{N x  T}}\underbrace{\mathbf{M}^T}_{\hbox{T x  N}} =\underbrace{\mathbf{C}^\text{neurons}}_{\hbox{N x  N}}  = 
+\underbrace{\mathbf{U}}_{\hbox{N x  N}} 
+\underbrace{\mathbf{\Lambda}^\text{neurons}}_{\hbox{N x  N}} 
+\underbrace{\mathbf{U}^T}_{\hbox{N x  N}} 
+\]
+where $\mathbf{U}$ is the matrix of eigenvectors of $\mathbf{C}^\text{neurons}$, and $\mathbf{\Lambda}^\text{neurons}$ is the diagonal matrix of eigenvalues. 
+
+\[\frac{1}{N}\underbrace{\mathbf{M}^T}_{\hbox{T x N}}\underbrace{\mathbf{M}}_{\hbox{N x T}}=\underbrace{\mathbf{C}^\text{time}}_{\hbox{T x  T}}  = 
+\underbrace{\mathbf{V}}_{\hbox{T x  T}} 
+\underbrace{\mathbf{\Lambda}^\text{time}}_{\hbox{T x  T}} 
+\underbrace{\mathbf{V}^T}_{\hbox{T x  T}} 
+\]
+where $\mathbf{V}$ is the matrix of eigenvectors of $\mathbf{C}^\text{time}$, and $\mathbf{\Lambda}^\text{time}$ is the diagonal matrix of eigenvalues. Note that if $T>N$, there are at most $N$ non-zero eigenvalues. 
+
+\item \textbf{SVD: connecting $\mathbf{U}$ and $\mathbf{V}$.}\\
+We start from 
+\begin{align}\frac{1}{N} M^TM\vec{v_i}=\lambda_i^{\text{ time}}\vec{v_i} \label{equ:1}\end{align}
+First, multiply $v_i^T$ on both sides of the equation \ref{equ:1}: $\vec{v_i}^TM^TM\vec{v_i}=N\lambda_i^{\text{ time}}\vec{v_i}^T\vec{v_i}$. This gives $\|M\vec{v_i}\|^2=N\lambda_i^{\text{ time}}$.\\
+Now we multiply $M$ on both sides of the equation \ref{equ:1}: $MM^TM\vec{v_i}=N\lambda_{i}^{\text{ time}}M\vec{v_i}$. To see where it can lead to, add in parentheses: $MM^T(M\vec{v_i})=N\lambda_{i}^{\text{ time}}(M\vec{v_i})$. This means that $M\vec{v_i}$ is an eigenvector of $MM^T$. Since we have a matrix of eigenvectors in $\mathbf{U}$, let's pick $u_i$ \textbf{(when needed it is $-u_i$)} so that 
+\begin{align}\vec{u_i}=M\vec{v_i}/\|M\vec{v_i}\|=M\vec{v_i}/\sqrt{N\lambda_i^{\text{time}}}.\label{equ:derive}
+\end{align} when $\lambda_i^{\text{time}}$ is not zero. This tentatively gives:
+\[\underbrace{\mathbf{U}}_{\hbox{N x  N}}\underbrace{\Sigma^1}_{\hbox{N x  T}}=\underbrace{M}_{\hbox{N x  T}}\underbrace{\mathbf{V}}_{\hbox{T x  T}}\]
+Now we need to figure out what is in the $\Sigma^1$ exactly. If $M$ has rank $r$, then it can be easily shown that $M^TM$ also has rank $r$. We can also see that $M^TM$ has $N-r$ nonzero eigenvalues---let's fill in the The first N rows/columns of $\Sigma^1$ with these nonzero eigenvalues on the diagonal. Check that they satisfy equation \ref{equ:derive}. What to fill in the rest $T-N$ columns of $\Sigma^1$? Knowledge from earlier of the semester about matrix spaces come into play: You should note that (1) the first r columns of $\mathbf{V}$ span the row space of $M$ so that the first r columns of $\mathbf{U}$ are not zero vectors (in the nullspace of $M$) but in the column space of $M$. (2) Given the orthorgonality of the 4 subspaces, you can fill in that the last T-r columns of $\mathbf{V}$ span the nullspace of $M$; the last N-r columns of $\mathbf{U}$ span the left nullspace of $M$. (3) This then gives that the last T-r columns of $\Sigma^1$ are zero column vectors to force zero vectors in the last T-r columns of $M \mathbf{V}$. It also gives us that the last N-r rows of $\Sigma^1$ are zero row vectors, as you cannot map either row space or nullspace to left nullspace. Thus we have filled in $\Sigma^1$.
+
+Writing the equation just above in another way, we have \[M=\mathbf{U}\Sigma^1\mathbf{V}^T\] This is called the singular value decomposition: nonzero positive diagonal entries in $\Sigma^1$ are called the singular values. \textbf{The singular values are forced to be positive, if a negative sign occur, move it into either that column of $\mathbf{U}$ or $\mathbf{V}$.} Do you see another connection to $PCA$ now? It is easier seen with the form $M\mathbf{V}=\mathbf{U}\Sigma$. Thus the biggest Principle Component (PC) from the perspective of time is simply the first column of $U$ times $\sigma_1$. And PC's (time perspective) are simply in $\mathbf{U}$'s columns. What's more, all the PC's are also orthogonal to each other.
+
+As a summary till now, we started from equation \ref{equ:1}, which involves $M^TM$ and its eigenvectors, and derived the SVD decomposition. But can we start from $MM^T$?
+
+We can start from the $MM^T$. Paralleling what we did to equation \ref{equ:1}, we start from equation \ref{equ:2} below
+\begin{align}\frac{1}{T} MM^T\vec{u_i}=\lambda_i^{\text{ neuron}}\vec{u_i} \label{equ:2}\end{align}
+and we obtain the same form for $M$: \[M=\mathbf{U}\Sigma_2\mathbf{V}^T\] where $\Sigma_2=\sqrt{T\lambda_i^{\text{ neuron}}}$. We conclude that $\Sigma_1=\Sigma_2$, which is saying $T\lambda_i^{\text{ neuron}}=N\lambda_i^{\text{ time}}$. \footnote{The $\Sigma^1$ or $\Sigma^2$ is exactly the SVD's $\Sigma$. Note how the Example 1 in Strang 5E (on page 383) is solved wrong (the factor missing). Note that in the book it uses $T=6-1=5$ rather than 6 to normalize the covariance matrix$_{\text{student}}$.) You should notice that whatever 5 or 6, the $\Sigma$ is not affected as normalizing factors are multiplied back in SVD's $\Sigma$.}
+
+
+\[\hspace{-15ex} \mathbf{\Sigma} = \underbrace{\left(\begin{matrix}
+\sqrt{T\lambda^\text{neurons}_1}&0&\cdots&0&0&\cdots&0\\
+0&\sqrt{T\lambda^\text{neurons}_2}&\cdots&0&0&\cdots&0
+\\  \vdots&\vdots&\ddots& \vdots&0&\cdots&0
+\\  0&0&\cdots& \sqrt{T\lambda^\text{neurons}_r}&0&\cdots&0
+\\  0&0&\cdots& 0&0&\cdots&0
+\end{matrix}\right)}_{\hbox{N x  T}} \\= \underbrace{\left(\begin{matrix}
+\sqrt{N\lambda^\text{time}_1}&0&\cdots&0&0&\cdots&0\\
+0&\sqrt{N\lambda^\text{time}_2}&\cdots&0&0&\cdots&0
+\\  \vdots&\vdots&\ddots& \vdots&0&\cdots&0
+\\  0&0&\cdots& \sqrt{N\lambda^\text{time}_r}&0&\cdots&0
+\\  0&0&\cdots& 0&0&\cdots&0
+\end{matrix}\right)}_{\hbox{N x  T}}\]
+
+If we do not scale our covariance matrices with $N$ or $T$ (which can be seen as $N$=$T$=1), then we obtain the mathematically elegant form with $\lambda_i^{\text{ neuron}}=\lambda_i^{\text{ time}}=\lambda_i$, that is, the eigenvalues of the two matrices are the same. This gives the SVD form in our book: \[
+    M=\mathbf{U}\Sigma\mathbf{V}^T=\sigma_1\vec{u_1}\vec{v_1}^T+....+\sigma_r\vec{u_r}\vec{v_r}^T
+\]
+where the $\Sigma$ is a diagonal matrix with entries $\sigma_i$ being the squre root of the eigenvalue associated with the eigenvector $\vec{v_i}$ of the covariance matrix $M^TM$ (or with the the eigenvector $\vec{u_i}$ of the covariance matrix $MM^T$.) In general, we sort the columns of $\mathbf{U}$ and $\mathbf{V}$ with the descending order of the value of $\sigma's$---large $\sigma$ means large $\lambda$, which means more variance in the direction of the eigenvector with that variance $\lambda$.
+
+\textbf{Reading} This example shows you how to hand calculate the SVD of a small matrix: Strang5E 7.2-Example 3
+
+\textbf{Exercise} When is $A=U\Sigma V^T=X\Lambda X^{-1}$?
+
+\textbf{Exercise} (Strang 7.2-17) (The singular values are all positive.) Suppose $A$ is a 2 by 2 symmetric matrix with unit eigenvectors $u_1$ and $u_2$. If its eigenvalues are $\lambda_1=3$ and $\lambda_2=-2$. What is the SVD of $A$?
+
+\textbf{Exercise} (Strang 7.2-23) If $Q$ is an orthogonal matrix, why do all its singular values equal 1?
+
+\textbf{Exercise} (Strang 7.2-16) Suppose $A$ has orthogonal columns $w_1$, $w_2$,...,$w_n$ of length $\sigma_1$, $\sigma_2$,..., $\sigma_n$. What are $U$, $\Sigma$, and $V$ in the SVD of $A$?
+
+
+\item \textbf{Building intuition on the result of PCA/SVD}\\
+\textbf{Reading} Strang5E 7.2-``An Extreme Matrix" on Page 374.
+
+
+
+
+\end{enumerate}
+
+\textbf{Practice By Yourself}\\
+Chapter 7.1: 2. \\
+Chapter 7.2: Worked Problem B, 13, 3, 21 (The singlular values of $A+I$ are not $\sigma_j+1$), \textbf{10}, 24 (Once you reached the matrix as $\m{1 & 4}$, you should see that the one big variance is alone the direction of (1,4). The variance is 1+16=17.), 25.
+
+
+\includepdf[pages=-]{lagrange.pdf} %comment out when you edit other parts
+
+\end{document}

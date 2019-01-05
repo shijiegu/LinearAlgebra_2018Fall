@@ -1,0 +1,97 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Chapter 4: \\ Four Subspaces, Projections, Least Squres, QR Decomposition\vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Gu, Nov 8, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{enumerate}
+\item Basis\\
+Definition: Linearly independent vectors that span the space.\\
+\textbf{Notes}: The bases are not unique.\\
+Example:\\
+(1) The pivot columns of $A$ are a basis for its column space.\\
+(2) What about the basis for row space of $A$?\\
+(3) Fourier series
+\\
+\item Orthogonality of subspaces\\
+Definition: Two subspaces $V$ and $W$ of a vector space are orthogonal if every vector $v$ in $V$ is perpendicular to every vector $w$ in $W$.\\
+\textbf{Notes}: If $V$ and $W$ are to be orthogonal, dim($V$)+dim($W$)$\leq$ dimension of whole space; if $V$ and $W$ are orthogonal complements, the equality holds. ($V$'s orthogonal complement is denoted by $V^{\perp}$)\\
+\\
+\textbf{Exercise}(Strang 4.1-28c)
+True or False: Two subspaces that meet only in the zero vector are orthogonal.\\
+\\
+\textbf{Exercise}(Strang 4.1-14, 15)
+\begin{enumerate}
+\item Find a vector in the column space of both matrices:\\
+A=$\m{1 & 2\\1 & 3\\1 & 2}$, B=$\m{5 & 4\\6 & 3\\5 & 1}$.\\ Hint: This will be a vector $A\bm{x}$ and also $B\bm{\hat{x}}$. Think 3 by 4 with the matrix $\m{A & B}$.\\
+\item Extend the column space that $A$ spans to a p-dimensional subspace $V$ and a q-dimensional subspace $W$ of $\mathbf{R}^{n}$. What inequality on p+q guarantees that $V$ intersects $W$ in a nonzero vector? (These subspaces cannot be orthogonal.) 
+\end{enumerate}
+
+\item The Big Picture of 4 subspaces\\
+\\
+\\
+\\
+\\
+\textbf{Exercise}(Strang 4.1-14, 28b, modified)\\
+The subspace spanned by (1,1,0,0,0) and (0,0,0,1,1) is the orthogonal complement of the subspace spanned by (1,-1,0,0,0) and (2,-2,3,4,-4).
+\begin{enumerate}
+\item Is the statement true or false?
+\item If false, find the correct basis for the orthogonal complement.
+\\
+\end{enumerate}
+\textbf{Exercise}(Strang 4.1-5) If $Ax=b$ has a solution and $A^{T}=0$, is $y^{T}x=0$ or $y^{T}b=0$?
+\\
+\\
+\item Projection onto a subspace: $A^{T}A\hat{\bm{x}}=A^{T}\bm{b}$\\
+Problem: project $\bm{b}$ onto the column space of A (subspace spanned by the independent columns of A).\\
+The projection matrix that does this action of "projection" is $P=A(A^{T}A)^{-1}A^{T}$;\\
+The projection is $\bm{p} = P\bm{b}$ = $A\hat{\bm{x}}$\\
+\textbf{Notes}: \\
+When $A$ is an orthogonal matrix $Q$, $\bm{p}=Q\hat{\bm{x}},\hat{\bm{x}}=Q^{T}\bm{b},
+\bm{p}=QQ^{T}\bm{b}=\bm{q_1}(\bm{q_1}^{T}\bm{b})+...+\bm{q_n}(\bm{q_n}^{T}\bm{b}) $ \\(When $Q$ is square, then $QQ^{T}=I$, one can further simplify $\bm{p}=\bm{b}$)
+
+\item The Gram-Schmidt Process and QR decomposition
+\begin{enumerate}
+\item Key point for simplifying calculation using orthonormal matrix: $Q^{T}Q=I$.\\
+When $Q$ is square, its transpose is its inverse (orthogonal matrix): $Q^{T}=Q^{-1}$\\
+\textbf{Notes}: One more good property that might come in handy: $\|Qx\|=\|x\|$\\
+\\
+\textbf{Exercises} (Strang 4.4-3)\\
+(a) If $A$ has three orthogonal columns each of length 4, what is $A^{T}A$?\\
+(b) If $A$ has three orthogonal columns each of length 1, 2, 3, what is $A^{T}A$? \\
+\\
+
+\item The Gram-Schmidt Process\\
+\textbf{Notes}: During calculation, check if the new vector is perpendicular to the ones found before.
+\item QR decomposition: $A=QR$\\
+$\m{\bm{a} & \bm{b} & \bm{c}}=\m{\bm{q_1} & \bm{q_2} & \bm{q_3}} \m{\bm{q_1}^{T}\bm{a} & \bm{q_1}^{T}\bm{b} & \bm{q_1}^{T}\bm{c} \\ &\bm{q_2}^{T}\bm{b} & \bm{q_2}^{T}\bm{c} \\ & & \bm{q_3}^{T}\bm{c}}$\\
+Least square equation can be simplified to $R\hat{\bm{x}}=Q^{T}\bm{b}$ or $\hat{\bm{x}}=R^{-1}Q^{T}\bm{b}$\\
+\\
+\textbf{Exercises} (Strang 4.4-11):\\
+Which point is closest to (1,0,0,0,0) on the plane spanned by two vectors $\bm{a}=(1,3,4,5,7)$ and $\bm{b}=(-6,6,8,0,8)$\\
+\\
+\\
+\textbf{Exercises} (Strang 4.4-36):\\
+If $A$ is $m$ by $n$ with rank $n$, MATLAB's code \texttt{qr(A)} produces (m by m)(m by n), $A=\m{Q_1 & Q_2}\m{R \\ 0}.$ \\The n columns of $Q_1$ are an orthonormal basis for which fundamental subspace? The m-n columns of $Q_2$ are an orthonormal basis for which fundamental subspace?
+
+\end{enumerate}
+
+
+\end{enumerate}
+
+\end{document}

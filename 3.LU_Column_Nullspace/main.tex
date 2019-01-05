@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Column Space and Null Space, LU decomposition \vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Gu, Oct 18, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{enumerate}
+\item Key concepts about "spaces"\\
+(1) The space made up of all column vectors that have $n$ components: $\mathbb{R}^{n}$.\\
+(2) Some of them (Let's call the set of these vectors $\textbf{S}$) \textit{can} make up a \textit{sub}space -- as long as any vector that is a linear combination of these vectors stays in the subspace.\\
+    \-\hspace{0.8cm} Formally, a subspace of a vector space is a set of vectors that satisfies two requirements: if $\bm{v}$ and $\bm{w}$ are vectors in the subspace and $c$ is any scalar, then $\bm{v}+\bm{w}$ is in the subspace and $c\bm{v}$ is in the subspace. This is equivalent to $c\bm{v}+d\bm{w}$ is in the subspace.\\
+    \-\hspace{0.8cm} Let's call all linear combinations of these vectors in $\textbf{S}$ as $\textbf{SS}$. Then we can say $\textbf{S}$ span $\textbf{SS}$, and $\textbf{SS}$ is spanned by $\textbf{S}$. In the textbook, it also says $\textbf{S}$ is the span of $\textbf{SS}$.\\
+(3) The space itself is subspace of itself.
+
+
+\textbf{Note}:\\
+I recommend \textbackslash bm for typing vectors. For example, \textbackslash bm\{v\} gives $\bm{v}$ (Don't forget \textbackslash usepackage\{amsmath, amsfonts, bm\} at the beginning at the latex document). \\
+\\
+\textbf{Exercise}:\\
+Explain why a plane in $\mathbb{R}^{3}$ is not necessarily a subspace. 
+
+\item Column space of $A^{m \times n}$: all combinations of columns of $A$ (so it is a subspace in $\underline{\hspace{1cm}}$)\\
+Why does it matter? Recall our first section: $A\bm{x}=\bm{b}$ has solution exactly when $\bm{b}$ is in the column space of $A$.\\
+$\textbf{SS}$: column space of A, notated as $C(A)$ in the textbook.\\
+$\textbf{S}$: columns of A. For invertible matrices, we would need all of its columns, but for singular ones, we actually only need its pivot columns (though having more columns would not hurt).
+We might get the whole $\mathbb{R}^{m}$ or only a subspace if it.\\
+\\
+\textbf{Exercise} (Strang 3.1-26):
+If A is any 5 by 5 invertible matrix, then its column space is $\underline{\hspace{1cm}}$. Why?\\
+\\
+\textbf{Exercise} (Strang 3.1-31):
+If \textbf{S} is $C(A)$ in $\mathbb{R}^{m}$ and \textbf{T} is $C(B)$ in $\mathbb{R}^{m}$, then \textbf{S+T} is the column space of what matrix $M$?\\
+
+\item Nullspace of $A^{m \times n}$: the subspace containing all solutions to $A\bm{x}=0$.\\
+(1) Each of the solutions has n components, so $N(A)$ is a subspace of $\mathbb{R}^{n}$.\\
+\\
+\textbf{Exercise} (Strang 3.2 Example 3)
+Describe the nullspace:\\
+(a) Invertible matrix: $A=\m{1 & 2 \\ 3 & 8}$ \\
+(b) Adding more rows: $A=\m{1 & 2 \\ 3 & 8 \\ 2 & 4 \\ 6 & 16}$ \\
+\textbf{In general}, how is the nullspace $N(C)$ related to the spaces $N(A)$ and $N(B)$, if $C=\m{A \\ B}$?\\
+(c) Non-Invertible matrix: $A=\m{1 & 2 & 2 & 4\\ 3 & 8 & 6 & 16}$\\
+(d) Non-Invertible matrix: $A=\m{1 & 2 & 1 & 2\\ 3 & 8 & 3 & 8}$\\
+\\
+
+\item Transposes and Permutations\\
+Transposes:\\
+(1) $(A+B)^{T} = A^{T} + B^{T}$\\
+(2) $(AB)^{T} = B^TA^T$\\
+(3) $(A^{-1})^T=(A^T)^{-1}$ ($A^T$ is invertible exactly when $A$ is invertible)\\
+\\
+\textbf{Exercise} Use (3) to prove that the inverse of a symmetric matrix is also symmetric.\\
+\\
+\textbf{Exercise}(Strang 2.7-16) If $A=A^T and B=B^T$, which of these matrices are certainly symmetric?\\
+(a) $A^2-B^2$ (b) $(A+B)(A-B)$ (c)$ABA$ (d)$ABAB$\\
+\\
+Permutations:\\
+(1) $P^{-1}=P^{T}$
+
+\item LU decomposition\\
+For a symmetric matrix $A$ its $LU$ decomposition can be simplified to $A=LDL^{T}$
+
+
+\end{enumerate}
+
+\textbf{More Exercises}:\\
+
+
+\end{document}

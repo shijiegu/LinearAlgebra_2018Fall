@@ -1,0 +1,97 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Solving $A\bm{x}=\bm{b}$ \vspace{-5ex}}
+\lhead{Linear Algebra Section B}
+\rhead{Gu, Oct 25, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+
+\begin{enumerate}
+\item $\bm{b}=\mathbf{0}$
+\begin{enumerate}
+\item (Matrix notion in displaying the answer)\\
+Find the solution, when $A=\m{1 & 3 & 10\\2 & 6 & 20\\3 & 9 & 30}$\\
+For this example, stop once you have finished elimination.\\
+Now, what does it mean to have this form? You should know that what is behind this matrix form is essentially an equation. What is the solution?\\
+\\
+We can also express the same set of points using a matrix notation.\\
+Why did we set 1's and 0's? It directly gives you independent answers.\\
+\item (Some tricks in solving)\\
+
+\fbox{If $R=\m{\bm{I} & \bm{F}\\ \bm{0} & \bm{0}}$, then $N=\m{\bm{-F} \\ \bm{I}}$ is the solution for $RN=0$.}\\
+Find the solution, when $A=\m{1 & 0 & 3 & 2 & -1\\0 & 1 & 0 & 4 & -3\\1 & 1 & 3 & 6 & -4}$\\
+\\
+\\
+What if $A=\m{1 & 3 & 0 & 2 & -1\\0 & 0 & 1 & 4 & -3\\1 & 3 & 1 & 6 & -4}$, that is, I switched the second and the third column?\\
+
+\end{enumerate}
+
+\item $\bm{b} \neq 0$
+\begin{enumerate}
+\item Solve $A\bm{x}=\bm{b}$ when $A=\m{1 & 3 & 0 & 2\\0 & 0 & 1 & 4\\1 & 3 & 1 & 6},\bm{b}=\m{-1\\-3\\-4}$\\
+The solution is made up of any vectors that can give $\bm{b}$ on the right side plus any vectors that produces zeros on the right side.\\
+(0) For a solution to exist, zero rows in $R$ must also be zero in $d$, which is essentially saying that $\bm{b}$ needs to be in the column space of $A$.\\
+(1) Only look at rank columns, find the solution. \\
+(2) Now, add in null space (sometimes null space contains only the zero vector, so you can skip this step.)\\
+\\
+\\
+Note: the particular solution is not multiplied by any arbitrary constant.
+
+\item Summary of possibilities for linear equations for a matrix with $m$ rows and $n$ columns.
+(1)$R=\m{I} (r=m=n)$, 1 solution\\
+(2)$R=\m{I & F} (r=m<n), \infty$ solutions\\
+(3)$R=\m{I \\ \bf{0}} (r=n<m)$, 1 solution or 0 solution\\
+(4)$R=\m{I & F\\ \bf{0} & \bf{0}} (r<m,r<n), \infty$ solutions or 0 solution\\
+
+\textbf{Exercise}(and a useful fact in Section3.4)\\
+True or false: Any set of $n$ vectors in $\mathbf{R}^m$ must be linearly dependent if $n>m$.
+
+\textbf{Exercise}(Strang 3.3-22)\\
+If $A\bm{x}=\bm{b}$ has infinitely many solutions, why is it impossible for $A\bm{x}=\bm{B}$ (new right side) to have only one solution? Could it have no solution?\\
+\\
+\\
+\textbf{Exercise}(Strang 3.3-B)\\
+In each of the description of the solution to $A\bm{x}=\bm{b}$ below, infer whenever you can about $\bm{A}$'s critical numbers, $\bm{m}$, $\bm{n}$, $\bm{r}$ and possibly about $\bm{b}$.\\
+(a) There is only one solution.\\
+(b) $\bm{x}=\m{2\\1}+c\m{1\\1}$\\
+(c) $\bm{x}=\m{1\\1\\0}+c\m{1\\0\\1}$\\
+(d) No solution\\
+(e) There are infinitely many solutions.\\
+
+\end{enumerate}
+
+
+
+
+\end{enumerate}
+
+\textbf{More Exercises}:
+\begin{enumerate}
+\item (Similar to Strang 3.3-32) Find the $LU$ decomposition of $A$ and the complete solution to $A\bm{x}=\bm{b}$:\\
+$A=\m{1 & 1 & 0 & 2\\1 & 2 & 0 & 3\\2 & 3 & 0 & 5\\}=\m{1 & 1 & 0\\1 & 2 & 0\\2 & 3 & 1\\}\m{1 & 0 & 0 & 1\\0 & 1 & 0 & 1\\0 & 0 & 0 & 0\\}, \bm{b}=\m{2\\3\\5}$
+\\
+\\
+\item (Strang 3.3-34)\\ Suppose you know that the 3 by 4 matrix has the vector $\bm{s}=(2,3,1,0)$ as the only special solution to $A\bm{x}=\bm{0}$, what is the row reduced echelon form $R$ of $A$?
+\\
+\item (Strang 3.3B)\\
+Factor $A$ into $A=\bm{u}\bm{v}^{T}$, if $R$ is available.\\ $A=\m{1 & 1 & 0 & 2\\1 & 2 & 0 & 3\\2 & 3 & 0 & 5\\}=\m{1 & 1 & 0\\1 & 2 & 0\\2 & 3 & 1\\}\m{1 & 0 & 0 & 1\\0 & 1 & 0 & 1\\0 & 0 & 0 & 0\\}=E^{-1}R$\\
+\\
+\\
+\item (Strang 3.2-48) \\
+Suppose column $j$ of $B$ is a combination of previous columns of $B$. Show that column $j$ of $AB$ is the same combination of previous columns of $AB$. Then $AB$ cannot have new pivots columns, so rank($AB$)$\leq$ rank($B$). Does rank($AB$)$\leq$ rank($A$)?
+
+\end{enumerate}
+\end{document}

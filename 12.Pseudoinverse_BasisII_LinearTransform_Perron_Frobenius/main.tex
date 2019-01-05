@@ -1,0 +1,127 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Pseudoinverse, Change of Basis (cont.), Linear Transformation \footnote{One thing that I will not review today is the matrix norm. If you need help, the textbook is pretty clear about the concepts.}\\Perron-Frobenius Theorem \vspace{-5ex}}
+\lhead{Linear Algebra Section B Penultimate}
+\rhead{Shijie Gu, Dec 27, 2018}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+\vspace{1ex}
+\begin{enumerate}
+\item \textbf{The Pseudoinverse}\\
+Last time we arrived at $A=U\Sigma V^T$, where $U$ and $V$ are the eigenvectors of $AA^T$ and $A^TA$ so that \begin{align}A\bm{v}_j=\begin{cases}\sigma_j\bm{u}_j \quad & \text{for } j\leq r\\\bm{0} \quad & \text{for } j\ge r\end{cases} \end{align}
+We go from row space to the column space for $j\leq r$. We do the reverse: go from column space back to row space:
+\begin{align}A^+\bm{u}_j=\begin{cases}\frac{1}{\sigma_j}\bm{v}_j \quad & \text{for } j\leq r\\\bm{0} \quad & \text{for } j\ge r\end{cases} \label{eq:pseudo} \end{align}
+Let's write the above equation into matrices: 
+\begin{align}
+A^+=V\Sigma^+U^T
+\end{align}
+The $A^+$ above is just called the pseudoinverse of $A$.\\
+\textbf{Easy Exercise} (Strang 7.4-13)
+If $A$ has rank r, does $A^+$ also have rank r?\\
+\textbf{Exercise: Do it yourself} (Strang 7.4-10, 11)
+Obtain the SVD of $A=\m{3 & 4 & 0}$. Find its pseudoinverse.\\
+\begin{enumerate}
+\item \textbf{The difference with the normal inverse}\\
+ When $A$ is invertible, the second case for the pseudoinverse does not exist, its pseudoinverse is just the inverse; its inverse is just the pseudoinverse. (You can see it by simply taking the inverse on both sides of $A=U\Sigma V^T$). What the inverse does is that it simply maps a vector from its column space to its row space. The inverse's column space is the row space of the original matrix.\\
+ Now, when the matrix is not invertible, left nullspace and nullspace are not $\mathbf{Z}$ anymore. What the pseudoinverse does in addition to what an inverse does to vectors in the column space is that it kills any vectors from the left nullspace to the zero vector. This is the second case in the equation \ref{eq:pseudo}.
+\item $AA^+$ and $A^+A$\\
+$AA^+$ projects onto the column space of $A$;\\
+$A^+A$ projects onto the row space of $A$;\\
+\textbf{Exercise} Find $AA^+$ and $A^+A$ of the $A$ in the previous exercise.\\
+To see why they are projection matrix, you can refer to Strang 7.4-21 for arriving at it analytically. I include it below nevertheless so that you see it.
+\begin{align}
+A^+A=(\sum^{r}_{1}{\frac{\bm{v}_i\bm{u}_i^T}{\sigma_i}})(\sum^r_1\sigma_j\bm{u}_j\bm{v}_j^T)=\sum^r_1\bm{v}_i\bm{u}_i^T\bm{u}_i\bm{v}_i^T=\sum^r_1\bm{v}_i\bm{v}_i^T
+\end{align}
+the second equation is because $\bm{u}_i^T\bm{u}_j=0$ when $i\neq j$. Now it is clear that it is a (sum of) projection(s). Similarly, $AA^+=\sum^r_1\bm{u}_i\bm{u}_i^T$.
+
+\item \textbf{Application to least squares with dependent columns}\\
+\textbf{Reading: Chapter 7.4} ``Application to least squares with dependent columns"\\
+Here let's briefly see why $\bm{\hat{x}}=A^+\bm{b}$ is the shortest solution to the problem \begin{align}A^TA\bm{\hat{x}}=A^T\bm{b}\label{equ:proj}\end{align} Observe the equation on the right side: $A^T\bm{b}$, we can decompose $\bm{b}$ into a vector in the column space of $A$, $\bm{b}_{\text{column}}$ and a vector in the left nullspace of $A$, $\bm{b}_{\text{left\_null}}$. Let's first consider the case of just $\bm{b}=\bm{b}_{\text{left\_null}}$ or $\bm{b}=\bm{b}_{\text{column}}$. 
+\begin{enumerate}
+\item When $\bm{b}=\bm{b}_{\text{left\_null}}$\\ We get $A^T\bm{b}=\bm{0}$ on the right side of the equation. We thus want $A\bm{\hat{x}}=0$. This is saying that $\bm{\hat{x}}$ is in the nullspace of $A$. If we are after the shortest $\bm{\hat{x}}$, then $\bm{\hat{x}}=\bm{0}$.
+
+\item When $\bm{b}=\bm{b}_{\text{column}}$\\ We get $A^TA\bm{\hat{x}}=A^T\bm{b}_{\text{column}}$, which is saying $A\bm{\hat{x}}=\bm{b}_{\text{column}}$, $\bm{\hat{x}}$ will then have to be in the rowspace of $A$ so that $\bm{b}_{\text{column}}\neq\bm{0}$.
+
+Combining the two cases, you see a parallelism to equation \ref{eq:pseudo}. $\bm{\hat{x}}=A^+\bm{b}$.
+\end{enumerate}
+
+When $\bm{b}$ is a random vector, decompose it into the 2 cases, and the sum of the two cases will satisfy the equation \ref{equ:proj}.
+\end{enumerate}
+\textbf{Exercise} (Strang 7.4 A)
+If $A$ has full column rank, then it has a left inverse $C=(A^TA)^{-1}A^T$ that gives $CA=I$. Explain why the pseudoinverse is $A^+=C$ in this case.
+
+\item \textbf{Change of basis and Similar Matrices (cont.)}\\
+We knew before (I already introduced this topic in 6.1-6.2) that changing an input basis from the standard basis to an output basis put in the columns of $M$ can be realized by the matrix $M^{-1}$ (from standard to $M$). On the other hand, $M$ can change the output from using the basis in $M$ to standard. 
+
+\textbf{Exercise} What matrix changes input basis from $V$ to that of $W$'s (bases in the columns of $V$ and $W$)?
+
+Next, we derive the formula for any transformation in a new basis set $\bm{m}_1, ..., \bm{m}_n$: 
+\begin{align}
+    B_\text{$\bm{m}$'s to $\bm{m}$'s}=M^{-1}_\text{standard to $\bm{m}$'s} A_\text{standard} M_\text{$\bm{m}$'s to standard}
+    \label{equ:basis}
+\end{align}
+Note that the transformation by $A$ and $B$'s are the \textbf{same} transformation---just reads input and spits out output in a different basis set than the standard's.\\
+\textbf{Exercise} Use eigenvectors as your new basis set, $B$ is now what matrix?
+
+\item \textbf{The Geometry behind $A=U\Sigma V^T$}\\
+From the ``change of basis" point of view, we get \begin{align}
+    A_\text{standard to standard}=U_\text{$\bm{u}$'s to standard} \Sigma_\text{$\bm{v}$'s to $\bm{u}$'s} V^T_\text{standard to $\bm{v}$'s} \label{eq:svd}
+\end{align}
+Alternatively, 
+\begin{align}
+    \Sigma_\text{$\bm{v}$'s to $\bm{u}$'s}=U^T_\text{standard to $\bm{u}$'s} A_\text{standard to standard} V_\text{$\bm{v}$'s to standard}
+\end{align}
+You can think of equation \ref{eq:svd} as a rotation to another basis direction, then stretching (output into another direction), then a final rotation back to the standard basis direction. The next decomposition, called the Polar Decomposition separates rotation and stretching.\\
+The following 2 exercises shall help you get a sense of a transformation from $\bm{v}$ to $\bm{u}$.\\
+\textbf{Exercise} (Strang 8.2-5) With bases $\bm{v}_1,\bm{v}_2,\bm{v}_3$ and $\bm{w}_1,\bm{w}_2,\bm{w}_3$, suppose $T(\bm{v}_1)=\bm{w}_2$, $T(\bm{v}_2)=T(\bm{v}_2)=\bm{w}_1+\bm{w}_3$, what is the matrix $A_{\text{$\bm{v}$'s to $\bm{w}$'s}}$ for the transformation.
+
+\textbf{Exercise} (Strang 8.1-12) Suppose a linear transformation $T$ transforms (1,1) to (2,2) and (2,0) to (0,0). Find $T(\bm{v})$ when $\bm{v}=(3,1)$ and in general $\bm{v}=(v_1,v_2)$.
+
+\item \textbf{Polar Decomposition}\\
+Polar decomposition: $A=U\Sigma V^T=(UV^T)(V\Sigma V^T)=QH=(U\Sigma U^T)(UV^T)=KQ$\\
+$H,K$ is positive semidefinite in general, and $H^2=A^TA, K^2=AA^T$. 
+
+\item \textbf{Linear Transformation}
+\begin{enumerate}
+\item The transformation $T$ acting on each input vector in $V$ and $W$ is linear if $T(c\bm{v})=cT(\bm{v})$ for all c and $T(\bm{v}+\bm{w})=T(\bm{v})+T(\bm{w})$. Equivalently, $T(c\bm{v}+d\bm{w})=cT(\bm{v})+dT(\bm{w})$ for all $c$ and $d$.
+\item Some terminologies:\\
+(1) \textbf{Range}: set of all outputs $T(\bm{v})$
+(2) \textbf{Kernel}: set of all inputs $T(\bm{v})=0$
+You will soon see how all linear transformation can be produced by matrices: If $T(\bm{v})=A\bm{v}$, range is column space and kernel is nullspace.\\
+\end{enumerate}
+\textbf{Exercise} (Strang 8.1-Example 6) Is the transformation linear: Project every 3-dimensional vector onto the horizontal plane $z=1$. Can you write a matrix $A$ for describing this transformation?\\
+\\
+\textbf{Exercise} (Strang 8.1-Example 7) Suppose $A$ is an invertible matrix, is the transformation linear?
+
+\item \textbf{Use matrix to produce linear transformation}\\
+For the basis set $\bm{v}_1,\bm{v}_2...\bm{v}_n$, we have $T(\bm{v}_1),T(\bm{v}_2),...T(\bm{v}_n)$ as columns of $A$. This $A$ is the $A_\text{$\bm{v}$'s to $\bm{v}$'s}$\\
+\textbf{Exercise} Deduce the rotation matrix in the xy plane.
+\item \textbf{Matrix products matches transformations}\\
+You can think of equation \ref{equ:basis} as \textbf{I$\times$T (a transformation done by matrix $A$)$\times$I}, as ``change of basis" only changes basis while keeping the identity.
+
+\item \textbf{Perron-Frobenius Theorem}\\
+You will see this theorem in various contexts, for example, in your course in probability. The proof will be skipped here. Let's state this theorem (though it is still only part of it):\\
+Suppose $A$ has all entries greater than 0,
+$A$ has a positive (real) eigenvalue $\lambda_{\text{max}}$ such that all other eigenvalues of $A$ satisfy $|\lambda| \leq \lambda_{\text{max}}$. Furthermore, $\lambda_{\text{max}}$ has algebraic and geometric multiplicity one, and has an eigenvector $\bm{x}$ with all elements in $\bm{x}>0$.
+\end{enumerate}
+
+\textbf{More Exericise 1} (Strang 8.2 20,21) One basis for second-degree polynormials is $\bm{v}_1=1$, $\bm{v}_2=x$, $\bm{v}_3=x^2$. Another basis is $\bm{w}_1=\frac{1}{2}(x^2+x)$, $\bm{w}_2=1-x^2$, $\bm{w}_3=\frac{1}{2}(x^2-x)$. Find the two change of basis matrices, from the $\bm{w}$'s to the $\bm{v}$'s, and from the $\bm{v}$'s to the $\bm{w}$'s.\\
+
+\textbf{Do it yourself:} \textbf{Worked Example 8.2A and 8.2-33}, \textbf{8.2-3\&8} (Great exercises for showing your when $A^2$. My hint: add in subscript of $A$.), \textbf{10\&11} (you'd see a closer connection between linear transformation and matrices), \textbf{22} (a refresher on matrix notation), \textbf{24} (Understand QR decomposition in terms of ``change of basis"), \textbf{26}, \textbf{27\&32} (A fun problem).\\
+
+Next time will be our \textbf{final} class! In addition to chapter 8.3, we would do some review by talking about (1) ``Elipse" of $\bm{x}^TA\bm{x}$ and $A\bm{x}$ (review Strang 6.5 and 7.4-14); (2) When are eigenvectors are normal? (3)...and maybe something with positive definite matrices by introducing you the central matrix in Spectral Clustering! Stay tuned. (This also means next class might be longer than 45 min.)
+
+\end{document}

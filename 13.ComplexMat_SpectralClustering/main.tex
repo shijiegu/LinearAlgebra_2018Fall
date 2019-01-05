@@ -1,0 +1,137 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{amsmath, amsfonts, bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\newcommand\m[1]{\begin{bmatrix}#1\end{bmatrix}} 
+
+\date{\vspace{-5ex}}
+\title{\vspace{-5ex} Complex Numbers, Normal Matrices, Positive Definite Matrices (cont.), Matrix Ellipses \vspace{-5ex}}
+\lhead{Linear Algebra Section B Ultimate}
+\rhead{Shijie Gu, Jan 3, 2019}
+
+\begin{document}
+{\let\newpage\relax\maketitle}
+\maketitle
+\thispagestyle{fancy}
+\vspace{1ex}
+Today is mainly a review session, though there might still be some new perspectives on matrices---you may find them helpful later after the course when you actually use linear algebra. 
+\begin{enumerate}
+\item \textbf{Extending some concepts with complex numbers}
+\begin{enumerate}
+\item \textbf{Euler's Identity}\\
+The ``Eu" pronounces /o/.\[e^{i\theta}=\cos \theta + i \sin \theta\] where $\theta$ denotes a real number. This formula says that the real and imaginary parts of a complex exponential function $f(\theta)=e^{i\theta}$ are trigonometric functions of $\theta$. This formula comes from the Maclaurin series representation for the exponential function \[e^{z}=\sum^\infty_{k=0}\frac{z^k}{k!}\]
+Replace $z$ with $i \theta$. Every even power of $i$ will be a real number ($\pm 1$) and every odd power of $i$ will be imaginary ($\pm i$). So split the series into two pieces:
+\begin{align}
+    e^{i\theta}&=\sum^\infty_{k=0}\frac{(i\theta)^k}{k!}
+    =(1-\frac{\theta ^2}{2!}+\frac{\theta ^4}{4!}+\hdots)+i(\theta-\frac{\theta ^3}{3!}+\frac{\theta ^5}{5!}+\hdots)\\
+    &=\cos \theta + i \sin \theta
+\end{align}
+\item \textbf{Hermitian Matrix} (symmetric matrix in the real case)\\
+\\
+\fbox{When you transpose a complex vector or a matrix, take the complex conjugate too.}\\
+\\
+This action of transposing and also ``conjugating" on a matrix $A$ can be denoted as $A^H$ or $A^*$. It reads ``A Hermitian".
+\[\text{If  } A=\m{1 & i \\ 0 & 1+i}, \text{then  } A^H=\m{1 & 0 \\ -i & 1-i}\]
+The Hermitian matrix is such that $A=A^H$. You will see that it has orthogonal eigenvectors and real eigenvalues, just like the real symmetric matrix. Although, in the Hermitian case, the eigenvectors are complex. If they are normalized in length, the eigenvector matrix is not $Q$, it is $U$, which comes next.
+
+\item \textbf{Unitary Matrix} (orthogonal matrix in the real case)\\
+\fbox{A unitary matrix is a (complex) square matrix that has orthonormal columns.}\\
+Similar to $Q^TQ=I$, here we have $U^HU=I$. \\Also similar to $Q^{-1}=Q^T$, we have $U^{-1}=U^H$.\\
+Finally, both $Q$ and $U$ have $|\lambda|=1$.
+\end{enumerate}
+\item \textbf{When are the eigenvectors orthogonal?}\\
+\fbox{iif $AA^H=A^HA$, $A$ has an orthogonal basis of eigenvectors.}\\
+The matrices that satisfied the condition $AA^H=A^HA$ are called \textbf{normal} matrices---you might have seen it while reading the textbook by Strang.\\ I have attached the proof \footnote{http://www.cs.uleth.ca/~holzmann/notes/eigen.pdf} of this theorem---fairly straightforward. Please take a look at it if you are curious! You may read and skip the proof of the Schur decomposition when you first read it.
+So, given the following classes of matrices we have learned so far, which of these have orthogonal eigenvectors?
+\begin{enumerate}
+\item Real symmetric
+\item Hermitian
+\item Orthonormal (meaning that it is not necessarily square)
+\item Orthogonal
+\item Unitary
+\item Skew symmetric
+\item Skew Hermitian ($A^*=-A$)
+\end{enumerate}
+What about their eigenvalues? Real or purely imaginary or just complex in general?
+
+\item \textbf{Ellipses of $A\bm{x}$ when $\bm{x}$ moves on the unit circle}\\
+Before we see $A\bm{x}$ with the constraint on $\bm{x}$, let's see the ellipses behind $\bm{x}^TA\bm{x}=1$.
+\begin{enumerate}
+\item \textbf{The geometry (change of basis) behind $\bm{x}^TA\bm{x}=1$} (Strang 6.5)\\
+Suppose $A=Q\Lambda Q^T$ is positive definite, so $\lambda_i>0$. The graph of $\bm{x}^TA\bm{x}=1$ is an ellipse:
+\[\m{x & y}Q\Lambda Q^T\m{x\\y}=\m{X & Y}\Lambda\m{X\\Y}=\lambda_1 X^2+\lambda_2 Y^2=1 \quad \text{[let } \m{X\\Y}=Q^T\m{x\\y} \text{]} \]
+The axes point along eigenvectors. The half-lengths are $1/\sqrt{\lambda_1}$ and $1/\sqrt{\lambda_2}$.
+
+\item \textbf{Ellipses of $A\bm{x}$ when $\bm{x}$ moves on the unit circle} (Strang 7.4-14)\\
+For vectors in the unit circle $\|\bm{x}\|=1$ and for invertible $A$, the vectors $\bm{y}=A\bm{x}$ in the ellipse will have $\|A^{-1}\bm{y}\|=1$. This then gives $\bm{y}^T(A^{-1})^TA^{-1}\bm{y}=1 \Rightarrow \bm{y}^T(AA^T)^{-1}\bm{y}=1$. This tells you that this ellipse has axes along the singular vectors with lengths equal to $\sigma_1,...,\sigma_r$.\\
+For singular $A$, can you use the pseudoinverse? Why not? For a $ 2\times 2$ case, type $\texttt{eigshow}$ and enter the $\texttt{return}$ key into MATLAB if you have downloaded the function. It shows $A\bm{x}$ is a line. You know why it is a line.
+\end{enumerate}
+
+\item \textbf{Practice of proofs---positive (semi-)definite matrices}
+\begin{enumerate}
+    \item \textbf{The Laplacian matrix}\\
+    The main tools for spectral clustering are graph Laplacian matrices. Before we introduce Laplacian matrices as an exercise to prove positive semi-definiteness, I want to motivate you by showing you a result of clustering in the following figure.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.3]{Spectral_Clustering_Example.png}
+    \end{figure}
+
+    In developing spectral clustering, one key element is to show that the Laplacian matrix is positive semi-definite. This, surprisingly, can let you derive the number of clusters from the Laplacian matrices. We would not go that far, but we want to at least prove the positive semi-definiteness. The point is that I want you to see ``positive semi-definite" in real applications. Now here is the exercise.
+    
+    \textbf{Problem:} A graph of $n$ vertices, and their pair-wise similarities are put into \textbf{the weight matrix} $W^{n \times n}$. We also assume that the graph is undirected: $w_{ij}=w_{ji}$. We also define degree as $d_i =\sum_{j=1}^{n}w_{ij}$. We put the degrees $d_1, \hdots , d_n$ on the diagonal of the matrix $D^{n \times n}$---\textbf{the degree matrix}. The (unnormalized) Laplacian matrix $L$ is defined as \[L=D-W\] Let's show that $L$ is a positive semi-definite matrix.\\
+    \textbf{Solution:}
+    First, check if this matrix is symmetric! It is, then there are 4 ways to show that a $n \times n$ symmetric matrix is positive (semi-) definite: $n$ pivots, $n$ determinants, $n$ eigenvalues, $\bm{x}^TA\bm{x}>0$ for $\bm{x}\neq \bm{0}$. For positive definite, you can also find $R$ with independent columns such that $R^TR=A$. We will use the 4th method.\\
+    
+    For any $\bm{x}$, $\bm{x} \neq \bm{0}$:
+    \begin{align}
+        \bm{x}^T L \bm{x}&=\bm{x}^T D \bm{x}-\bm{x}^T W \bm{x}\\
+        &=\sum_{i=1}^nd_ix_i^2-\bm{x}^T\sum_{j=1}^{n}w_{ij}x_j\\
+        &=\sum_{i=1}^nd_ix_i^2-\sum_{i=1}^nx_i\sum_{j=1}^{n}w_{ij}x_j\\
+        &=\sum_{i=1}^nd_ix_i^2-\sum_{i,j=1}^n x_i x_j w_{ij}\\
+        &=\frac{1}{2}(\sum_{i=1}^nd_ix_i^2-2\sum_{i,j=1}^n x_i x_j w_{ij}+\sum_{j=1}^nd_jx_j^2)\\
+        &=\frac{1}{2}(\sum_{i=1}^n\sum_{j=1}^{n}w_{ij}x_i^2-2\sum_{i,j=1}^n x_i x_j w_{ij}+\sum_{j=1}^n\sum_{i=1}^{n}w_{ij}x_j^2)\\
+        &=\frac{1}{2}\sum_{i,j=1}^n w_{ij}(x_i-x_j)^2 \geq 0 
+    \end{align}
+This material is by no means required. I included this as an exercise because it gives you practice on writing matrix multiplying a vector as sums, and it reviews the concept of positive definite matrices. You also see that the seemingly unnecessary concepts such as positive definite matrices can be theoretical building blocks in real applications. If you are interested in Spectral Clustering, one visual reference is \href{https://people.csail.mit.edu/dsontag/courses/ml16/slides/lecture13.pdf}{here}, while a mathematical reference is \href{http://www.kyb.mpg.de/fileadmin/user_upload/files/publications/attachments/Luxburg07_tutorial_4488\%5b0\%5d.pdf}{here}. \\
+The next exercise was inspired by a homework exercise. I came upon the seemingly unnecessary inequality while studying information theory. I wrote it into an exercise to guide you through the proof.
+
+\newpage
+\item \textbf{Prove Hadamard inequality:} \footnote{https://en.wikipedia.org/wiki/Hadamard\%27s\_inequality}\\
+Hadamard's inequality states that if $N$ is a matrix having columns $v_i$, then
+\begin{align}
+{\displaystyle \left|\det(N)\right|\leq \prod _{i=1}^{n}\|v_{i}\|.}
+\end{align}
+This is the general form of Hadamard's inequality. \label{equ:general}
+\begin{enumerate}
+\item Show that the inequality is trivial for the singular case.
+
+\item \textbf{Alternative form of Hadamard inequality for positive definite matrices}\\
+Show that in the case of a positive definite case, the Hadamard inequality can be written in the following form, which states that for any positive definite matrix $K$, its determinant is less than the product of its diagonal elements,
+\begin{align}
+    \det(K) \leq \prod_i K_{ii} \label{equ:pd}
+\end{align}
+Hint: $K$ can be written as $N^{T}N$ where $N$'s columns are independent.
+\\
+\\
+To prove the inequality, you would need some algebraic manipulations, which is not complicated but not important for a linear algebra review exercise. Instead of proving the general inequality,
+\item Derive the condition that satisfies the equality for the form for positive definite matrix.
+
+\item Derive the condition that satisfies the equality in its general form.
+\end{enumerate}
+
+\end{enumerate}
+\end{enumerate}
+
+
+\vspace{40ex}
+Thanks for the whole semester! I have been trying to introduce intuitions through physics meanings alongside the theoretical concepts in the course---right from our first tutorial. I hope you had fun and will recall bits of the maths and intuitions when you use linear algebra in your studies later. I enjoyed grading your homework and saw some of your sparkling ideas. Good luck on finals. Matthew is holding a review session: 8th Jan (Tuesday) 15:00-16:40, Teaching Center 401.
+
+I will send out reviews on Quiz3 and the mid-term later. Be sure to take a look. I will also get back to you on Homework 9 and 10 via email.
+
+\end{document}
