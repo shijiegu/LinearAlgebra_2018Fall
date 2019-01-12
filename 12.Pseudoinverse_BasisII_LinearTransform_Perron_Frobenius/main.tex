@@ -46,6 +46,8 @@ To see why they are projection matrix, you can refer to Strang 7.4-21 for arrivi
 A^+A=(\sum^{r}_{1}{\frac{\bm{v}_i\bm{u}_i^T}{\sigma_i}})(\sum^r_1\sigma_j\bm{u}_j\bm{v}_j^T)=\sum^r_1\bm{v}_i\bm{u}_i^T\bm{u}_i\bm{v}_i^T=\sum^r_1\bm{v}_i\bm{v}_i^T
 \end{align}
 the second equation is because $\bm{u}_i^T\bm{u}_j=0$ when $i\neq j$. Now it is clear that it is a (sum of) projection(s). Similarly, $AA^+=\sum^r_1\bm{u}_i\bm{u}_i^T$.
+You can also see this by the following:
+$AA^+=U\Sigma V^T V\Sigma ^+U^T=U\Sigma\Sigma ^+U^T=\sum^r_1\bm{u}_i\bm{u}_i^T$.
 
 \item \textbf{Application to least squares with dependent columns}\\
 \textbf{Reading: Chapter 7.4} ``Application to least squares with dependent columns"\\
@@ -84,14 +86,10 @@ Alternatively,
 \begin{align}
     \Sigma_\text{$\bm{v}$'s to $\bm{u}$'s}=U^T_\text{standard to $\bm{u}$'s} A_\text{standard to standard} V_\text{$\bm{v}$'s to standard}
 \end{align}
-You can think of equation \ref{eq:svd} as a rotation to another basis direction, then stretching (output into another direction), then a final rotation back to the standard basis direction. The next decomposition, called the Polar Decomposition separates rotation and stretching.\\
-The following 2 exercises shall help you get a sense of a transformation from $\bm{v}$ to $\bm{u}$.\\
-\textbf{Exercise} (Strang 8.2-5) With bases $\bm{v}_1,\bm{v}_2,\bm{v}_3$ and $\bm{w}_1,\bm{w}_2,\bm{w}_3$, suppose $T(\bm{v}_1)=\bm{w}_2$, $T(\bm{v}_2)=T(\bm{v}_2)=\bm{w}_1+\bm{w}_3$, what is the matrix $A_{\text{$\bm{v}$'s to $\bm{w}$'s}}$ for the transformation.
-
-\textbf{Exercise} (Strang 8.1-12) Suppose a linear transformation $T$ transforms (1,1) to (2,2) and (2,0) to (0,0). Find $T(\bm{v})$ when $\bm{v}=(3,1)$ and in general $\bm{v}=(v_1,v_2)$.
+You can think of equation \ref{eq:svd} as a rotation to another basis direction, then stretching (output into another direction), then a final rotation back to the standard basis direction. The next decomposition, called the Polar Decomposition separates rotation and stretching. You will soon understand what is means to have a matrix from $\bm{v}\text{'s to $\bm{u}$'s}$.\\
 
 \item \textbf{Polar Decomposition}\\
-Polar decomposition: $A=U\Sigma V^T=(UV^T)(V\Sigma V^T)=QH=(U\Sigma U^T)(UV^T)=KQ$\\
+(Only when A is square) Polar decomposition: $A=U\Sigma V^T=(UV^T)(V\Sigma V^T)=QH=(U\Sigma U^T)(UV^T)=KQ$\\
 $H,K$ is positive semidefinite in general, and $H^2=A^TA, K^2=AA^T$. 
 
 \item \textbf{Linear Transformation}
@@ -107,7 +105,12 @@ You will soon see how all linear transformation can be produced by matrices: If 
 \textbf{Exercise} (Strang 8.1-Example 7) Suppose $A$ is an invertible matrix, is the transformation linear?
 
 \item \textbf{Use matrix to produce linear transformation}\\
-For the basis set $\bm{v}_1,\bm{v}_2...\bm{v}_n$, we have $T(\bm{v}_1),T(\bm{v}_2),...T(\bm{v}_n)$ as columns of $A$. This $A$ is the $A_\text{$\bm{v}$'s to $\bm{v}$'s}$\\
+For the basis set $\bm{v}_1,\bm{v}_2...\bm{v}_n$, we have $T(\bm{v}_1),T(\bm{v}_2),...T(\bm{v}_n)$ as columns of $A$. This $A$ is the $A_\text{$\bm{v}$'s to $\bm{v}$'s}$ if you express each output $T(\bm{v}_1),T(\bm{v}_2),...T(\bm{v}_n)$ in the basis of $\bm{v}'s$. If you express each $T(\bm{v}_1),T(\bm{v}_2),...T(\bm{v}_n)$ in the basis of $\bm{w}'s$, then this $A$ is the $A_\text{$\bm{v}$'s to $\bm{w}$'s}$.\\
+
+The following 2 exercises shall help you get a sense of a transformation from $\bm{v}$ to $\bm{u}$.\\
+\textbf{Exercise} (Strang 8.2-5) With bases $\bm{v}_1,\bm{v}_2,\bm{v}_3$ and $\bm{w}_1,\bm{w}_2,\bm{w}_3$, suppose $T(\bm{v}_1)=\bm{w}_2$, $T(\bm{v}_2)=T(\bm{v}_2)=\bm{w}_1+\bm{w}_3$, what is the matrix $A_{\text{$\bm{v}$'s to $\bm{w}$'s}}$ for the transformation.\\
+\textbf{Exercise} (Strang 8.1-12) Suppose a linear transformation $T$ transforms (1,1) to (2,2) and (2,0) to (0,0). Find $T(\bm{v})$ when $\bm{v}=(3,1)$ and in general $\bm{v}=(v_1,v_2)$.
+
 \textbf{Exercise} Deduce the rotation matrix in the xy plane.
 \item \textbf{Matrix products matches transformations}\\
 You can think of equation \ref{equ:basis} as \textbf{I$\times$T (a transformation done by matrix $A$)$\times$I}, as ``change of basis" only changes basis while keeping the identity.
